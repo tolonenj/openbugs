@@ -43,15 +43,17 @@ RUN chmod +x /sbin/tini
 COPY shiny-server.conf /etc/shiny-server/shiny-server.conf
 
 RUN install2.r -e shiny rmarkdown shinythemes shinydashboard && \
-mkdir -p /var/log/shiny-server && \
-chown rstudio:rstudio /var/log/shiny-server && \
-chmod go+w -R /var/log/shiny-server /usr/local/lib/R /srv /var/lib/shiny-server && \
-chmod ugo+rwx -R /usr/lib/rstudio-server/www && \
-mkdir -p /tmp/reports && \
-chmod 777 /tmp/reports
+    mkdir -p /var/log/shiny-server && \
+    chown rstudio:rstudio /var/log/shiny-server && \
+    chmod go+w -R /var/log/shiny-server /usr/local/lib/R /srv /var/lib/shiny-server && \
+    chmod ugo+rwx -R /usr/lib/rstudio-server/www && \
+    mkdir -p /tmp/reports && \
+    chmod 777 /tmp/reports && \
+    echo 'r-libs-user=~/R/library' >>/etc/rstudio/rsession.conf && \
+    echo "R_LIBS=\${R_LIBS-'/home/rstudio-server/R/library'}" >/usr/local/lib/R/etc/Renviron.site
 
 RUN wget -nd -P /tmp https://pj.freefaculty.org/Ubuntu/15.04/amd64/openbugs/openbugs_3.2.3-1_amd64.deb && \
-dpkg -i /tmp/openbugs_3.2.3-1_amd64.deb && rm /tmp/openbugs_3.2.3-1_amd64.deb
+    dpkg -i /tmp/openbugs_3.2.3-1_amd64.deb && rm /tmp/openbugs_3.2.3-1_amd64.deb
 
 COPY start.sh /usr/local/bin/start.sh
 
